@@ -29,6 +29,22 @@ function main() {
     -0.6, 0.45,
     -0.8, 0.45,
     -0.8, 0.3,
+    //angka 2
+    -0.45, 0.3,
+    -0.45, 0.6,
+    -0.4, 0.7,
+    -0.1, 0.7,
+    -0.05, 0.6,
+    -0.05, 0.1,
+    -0.35, -0.45,
+    -0.05, -0.45,
+    -0.05, -0.7,
+    -0.45, -0.7,
+    -0.45, -0.35,
+    -0.15, 0.25,
+    -0.15, 0.45,
+    -0.35, 0.45,
+    -0.35, 0.3
 	]
 
   var buffer = gl.createBuffer()
@@ -78,4 +94,5 @@ function main() {
   gl.clear(gl.COLOR_BUFFER_BIT)
 
   gl.drawArrays(gl.LINE_LOOP, 0, 23)
+  gl.drawArrays(gl.LINE_LOOP, 23, 15)
 }
