@@ -191,36 +191,36 @@ const main = () =>{
   ];
 
   var verticesCube = [
-    // Face A       // Red
-    -1, -1, -1,     1, 0, 0,    // Index:  0    
-     1, -1, -1,     1, 0, 0,    // Index:  1
-     1,  1, -1,     1, 0, 0,     // Index:  2
-    -1,  1, -1,     1, 0, 0,     // Index:  3
-    // Face B       // Yellow
-    -1, -1,  1,     1, 1, 0,     // Index:  4
-     1, -1,  1,     1, 1, 0,     // Index:  5
-     1,  1,  1,     1, 1, 0,     // Index:  6
-    -1,  1,  1,     1, 1, 0,     // Index:  7
-    // Face C       // Green
-    -1, -1, -1,     0, 1, 0,     // Index:  8
-    -1,  1, -1,     0, 1, 0,     // Index:  9
-    -1,  1,  1,     0, 1, 0,     // Index: 10
-    -1, -1,  1,     0, 1, 0,     // Index: 11
-    // Face D       // Blue
-     1, -1, -1,     0, 0, 1,     // Index: 12
-     1,  1, -1,     0, 0, 1,     // Index: 13
-     1,  1,  1,     0, 0, 1,     // Index: 14
-     1, -1,  1,     0, 0, 1,      // Index: 15
-    // Face E       // Orange
-    -1, -1, -1,     1, 0.5, 0,    // Index: 16
-    -1, -1,  1,     1, 0.5, 0,    // Index: 17
-     1, -1,  1,     1, 0.5, 0,    // Index: 18
-     1, -1, -1,     1, 0.5, 0,    // Index: 19
+    // Face A       // Putih
+    -0.25, -0.25, -0.25,     1, 1, 1,    // Index:  0    
+     0.25, -0.25, -0.25,     1, 1, 1,    // Index:  1
+     0.25,  0.25, -0.25,     1, 1, 1,     // Index:  2
+    -0.25,  0.25, -0.25,     1, 1, 1,     // Index:  3
+    // Face B       // Putih
+    -0.25, -0.25,  0.25,     1, 1, 1,     // Index:  4
+     0.25, -0.25,  0.25,     1, 1, 1,     // Index:  5
+     0.25,  0.25,  0.25,     1, 1, 1,     // Index:  6
+    -0.25,  0.25,  0.25,     1, 1, 1,     // Index:  7
+    // Face C       // Putih
+    -0.25, -0.25, -0.25,     1, 1, 1,     // Index:  8
+    -0.25,  0.25, -0.25,     1, 1, 1,     // Index:  9
+    -0.25,  0.25,  0.25,     1, 1, 1,     // Index: 10
+    -0.25, -0.25,  0.25,     1, 1, 1,     // Index: 11
+    // Face D       // Putih
+     0.25, -0.25, -0.25,     1, 1, 1,     // Index: 12
+     0.25,  0.25, -0.25,     1, 1, 1,     // Index: 13
+     0.25,  0.25,  0.25,     1, 1, 1,     // Index: 14
+     0.25, -0.25,  0.25,     1, 1, 1,      // Index: 15
+    // Face E       // Putih
+    -0.25, -0.25, -0.25,     1, 1, 1,    // Index: 16
+    -0.25, -0.25,  0.25,     1, 1, 1,    // Index: 17
+     0.25, -0.25,  0.25,     1, 1, 1,    // Index: 18
+     0.25, -0.25, -0.25,     1, 1, 1,    // Index: 19
     // Face F       // White
-    -1,  1, -1,     1, 1, 1,      // Index: 20
-    -1,  1,  1,     1, 1, 1,      // Index: 21
-     1,  1,  1,     1, 1, 1,      // Index: 22
-     1,  1, -1,     1, 1, 1,      // Index: 23
+    -0.25,  0.25, -0.25,     1, 1, 1,      // Index: 20
+    -0.25,  0.25,  0.25,     1, 1, 1,      // Index: 21
+     0.25,  0.25,  0.25,     1, 1, 1,      // Index: 22
+     0.25,  0.25, -0.25,     1, 1, 1,      // Index: 23
 ];
 
 var indicesCube = [
@@ -287,8 +287,12 @@ var indicesCube = [
   const fragmenShaderCode = `
   precision mediump float;
   varying vec3 vColor;
+  uniform vec3 uAmbientConstant;      // merepresentasikan warna sumber cahaya
+  uniform float uAmbientIntensity;    // merepresentasikan intensitas cahaya sekitar
   void main(){
-    gl_FragColor = vec4(vColor, 1.0);
+    vec3 ambient = uAmbientConstant * uAmbientIntensity;
+    vec3 phong = ambient;
+    gl_FragColor = vec4(phong * vColor, 1.0);
   }`
 
   const fragmenShaaderObject = gl.createShader(gl.FRAGMENT_SHADER);
@@ -352,6 +356,12 @@ var indicesCube = [
       3 * Float32Array.BYTES_PER_ELEMENT 
       );
     gl.enableVertexAttribArray(aColor);
+
+    // Untuk pencahayaan dan pembayangan
+    var uAmbientConstant = gl.getUniformLocation(shaderProgram, "uAmbientConstant");
+    var uAmbientIntensity = gl.getUniformLocation(shaderProgram, "uAmbientIntensity");
+    gl.uniform3fv(uAmbientConstant, [1.0, 1.0, 1.0]);   // warna sumber cahaya
+    gl.uniform1f(uAmbientIntensity, 0.432);               // intensitas cahaya: 43.2%
     
     gl.drawElements(type, indices.length, gl.UNSIGNED_SHORT, 0);
   }
@@ -470,9 +480,8 @@ var indicesCube = [
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  
 
     animate3();
-    animate2();
-    animateM();
     animateA();
+    animateCube();
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);
