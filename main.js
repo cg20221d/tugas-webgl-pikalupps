@@ -190,6 +190,48 @@ const main = () =>{
     16, 17, 18,    16, 18, 19
   ];
 
+  var verticesCube = [
+    // Face A       // Red
+    -1, -1, -1,     1, 0, 0,    // Index:  0    
+     1, -1, -1,     1, 0, 0,    // Index:  1
+     1,  1, -1,     1, 0, 0,     // Index:  2
+    -1,  1, -1,     1, 0, 0,     // Index:  3
+    // Face B       // Yellow
+    -1, -1,  1,     1, 1, 0,     // Index:  4
+     1, -1,  1,     1, 1, 0,     // Index:  5
+     1,  1,  1,     1, 1, 0,     // Index:  6
+    -1,  1,  1,     1, 1, 0,     // Index:  7
+    // Face C       // Green
+    -1, -1, -1,     0, 1, 0,     // Index:  8
+    -1,  1, -1,     0, 1, 0,     // Index:  9
+    -1,  1,  1,     0, 1, 0,     // Index: 10
+    -1, -1,  1,     0, 1, 0,     // Index: 11
+    // Face D       // Blue
+     1, -1, -1,     0, 0, 1,     // Index: 12
+     1,  1, -1,     0, 0, 1,     // Index: 13
+     1,  1,  1,     0, 0, 1,     // Index: 14
+     1, -1,  1,     0, 0, 1,      // Index: 15
+    // Face E       // Orange
+    -1, -1, -1,     1, 0.5, 0,    // Index: 16
+    -1, -1,  1,     1, 0.5, 0,    // Index: 17
+     1, -1,  1,     1, 0.5, 0,    // Index: 18
+     1, -1, -1,     1, 0.5, 0,    // Index: 19
+    // Face F       // White
+    -1,  1, -1,     1, 1, 1,      // Index: 20
+    -1,  1,  1,     1, 1, 1,      // Index: 21
+     1,  1,  1,     1, 1, 1,      // Index: 22
+     1,  1, -1,     1, 1, 1,      // Index: 23
+];
+
+var indicesCube = [
+    0, 1, 2,     0, 2, 3,     // Face A
+    4, 5, 6,     4, 6, 7,     // Face B
+    8, 9, 10,    8, 10, 11,   // Face C
+    12, 13, 14,  12, 14, 15,  // Face D
+    16, 17, 18,  16, 18, 19,  // Face E
+    20, 21, 22,  20, 22, 23   // Face F     
+];
+
   const objects = [
     {
       vertices: vertices3,
@@ -212,6 +254,12 @@ const main = () =>{
     {
       vertices: verticesA,
       indices: indicesA,
+      length: indicesA.length,
+      type: gl.TRIANGLES,
+    },
+    {
+      vertices: verticesCube,
+      indices: indicesCube,
       length: indicesA.length,
       type: gl.TRIANGLES,
     },
@@ -386,6 +434,20 @@ const main = () =>{
     gl.uniformMatrix4fv(uProjection, false, perspective);
 
     draw(objects[3].vertices, objects[3].indices, 0, objects[3].length, objects[3].type);
+  }
+
+  const animateCube = () =>{
+    var model = glMatrix.mat4.create();
+
+    var uModel = gl.getUniformLocation(shaderProgram, "uModel");
+    var uView = gl.getUniformLocation(shaderProgram, "uView");
+    var uProjection = gl.getUniformLocation(shaderProgram, "uProjection"); 
+
+    gl.uniformMatrix4fv(uModel,false, model);
+    gl.uniformMatrix4fv(uView, false, view);
+    gl.uniformMatrix4fv(uProjection, false, perspective);
+
+    draw(objects[4].vertices, objects[4].indices, 0, objects[4].length, objects[4].type);
   }
   
   function onKeydown(event) {
