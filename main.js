@@ -313,6 +313,8 @@ var indicesCube = [
   var horizontalSpeed = 0.132;
   var horizontalDelta = 0.0;
   var verticalDelta = 0.0;
+  var horizontalDeltaCube = 0.0;
+  var verticalDeltaCube = 0.0;
   var scaleDelta = 0.0;
   var scaleSpeed = 0.05;
 
@@ -369,6 +371,8 @@ var indicesCube = [
   const animate3 = () =>{
     var model = glMatrix.mat4.create();
 
+    glMatrix.mat4.translate(model, model, [0, 0, 2]);
+
     if (horizontalDelta >= (canvasWidth/2) || horizontalDelta <= (-canvasWidth/2+1)) {
       horizontalSpeed = horizontalSpeed * -1;
     }
@@ -387,49 +391,11 @@ var indicesCube = [
 
     draw(objects[0].vertices, objects[0].indices, 0, objects[0].length, objects[0].type);
   }
-  
-  const animate2 = () =>{
-    var model = glMatrix.mat4.create();
-
-    if (scaleDelta >= 2 || scaleDelta <= -0.5) {
-      scaleSpeed = scaleSpeed * -1;
-    }
-
-    scaleDelta += scaleSpeed;
-
-    glMatrix.mat4.translate(model, model, [0, 0, scaleDelta]);
-    
-    var uModel = gl.getUniformLocation(shaderProgram, "uModel");
-    var uView = gl.getUniformLocation(shaderProgram, "uView");
-    var uProjection = gl.getUniformLocation(shaderProgram, "uProjection"); 
-
-    gl.uniformMatrix4fv(uModel,false, model);
-    gl.uniformMatrix4fv(uView, false, view);
-    gl.uniformMatrix4fv(uProjection, false, perspective);
-
-    draw(objects[1].vertices, objects[1].indices, 0, objects[1].length, objects[1].type);
-  }
-
-  const animateM = () =>{
-    var model = glMatrix.mat4.create();
-
-    glMatrix.mat4.rotateY(
-      model, model, rotateY
-    );
-
-    var uModel = gl.getUniformLocation(shaderProgram, "uModel");
-    var uView = gl.getUniformLocation(shaderProgram, "uView");
-    var uProjection = gl.getUniformLocation(shaderProgram, "uProjection"); 
-
-    gl.uniformMatrix4fv(uModel,false, model);
-    gl.uniformMatrix4fv(uView, false, view);
-    gl.uniformMatrix4fv(uProjection, false, perspective);
-
-    draw(objects[2].vertices, objects[2].indices, 0, objects[2].length, objects[2].type);
-  }
 
   const animateA = () =>{
     var model = glMatrix.mat4.create();
+
+    glMatrix.mat4.translate(model, model, [0, 0, 2]);
 
     glMatrix.mat4.rotateX(
       model, model, rotateX
@@ -450,6 +416,7 @@ var indicesCube = [
     var model = glMatrix.mat4.create();
 
     glMatrix.mat4.translate(model, model, [0, 0, -20]);
+    glMatrix.mat4.translate(model, model, [horizontalDeltaCube, 0.0, verticalDeltaCube]);
 
     var uModel = gl.getUniformLocation(shaderProgram, "uModel");
     var uView = gl.getUniformLocation(shaderProgram, "uView");
@@ -473,6 +440,18 @@ var indicesCube = [
       rotateX -= 0.2;
     } else if (event.keyCode == 83 || event.keyCode == 40) { // s / arrow bawah
       rotateX += 0.2;
+    }
+
+    if (event.keyCode == 74) { // j
+      horizontalDeltaCube -= 0.2;
+    } else if (event.keyCode == 76) { // l
+      horizontalDeltaCube += 0.2;
+    }
+
+    if (event.keyCode == 73) { // i
+      verticalDeltaCube -= 0.2;
+    } else if (event.keyCode == 75) { // k
+      verticalDeltaCube += 0.2;
     }
   }
   document.addEventListener("keydown", onKeydown);
